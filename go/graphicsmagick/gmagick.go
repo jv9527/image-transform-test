@@ -7,12 +7,12 @@ import (
 	"github.com/gographics/gmagick"
 )
 
-func Resize(filename string, width, height, quality int) {
+func Resize(filename, rootDir, rootOut string, width, height, quality int) {
 	start := time.Now()
 	mw := gmagick.NewMagickWand()
 	defer mw.Destroy()
 
-	mw.ReadImage("images/" + filename)
+	mw.ReadImage(rootDir + filename)
 	/* if err := mw.ReadImageBlob(orig); err != nil {
 		return nil, err
 	} */
@@ -41,6 +41,6 @@ func Resize(filename string, width, height, quality int) {
 		}
 	} */
 
-	mw.WriteImage("results/gmagick/" + filename)
+	mw.WriteImage(rootOut + filename)
 	log.Printf("Gmagick resize time to %dx%d with quaility %d : %.4f", width, height, quality, time.Since(start).Seconds())
 }
