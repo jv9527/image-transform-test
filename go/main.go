@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	width    = 200
-	height   = 200
+	width    = 700
+	height   = 700
 	quality  = 70
 	filename = "file2.jpg"
 )
