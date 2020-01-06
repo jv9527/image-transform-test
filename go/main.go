@@ -23,6 +23,7 @@ const (
 var (
 	rootDir   = "images/"
 	MAX_BATCH = 10
+	MAX_FILES = 91
 )
 
 func main2() {
@@ -42,7 +43,7 @@ func main() {
 		chLimiter <- struct{}{}
 	}
 
-	files := make([]string, 0, 100)
+	files := make([]string, 0, MAX_FILES)
 
 	if err := filepath.Walk("images/100-images", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
