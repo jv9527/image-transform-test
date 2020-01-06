@@ -8,20 +8,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jv9527/image-transform-test/go/graphicsmagick"
-	"github.com/jv9527/image-transform-test/go/vips"
+	"github.com/image-transform-test/go/graphicsmagick"
+	"github.com/image-transform-test/go/vips"
 )
 
 const (
-	width    = 700
-	height   = 700
-	quality  = 70
+	width   = 700
+	height  = 700
+	quality = 100
 	//filename = "file1.jpeg"
 	filename = "file2.jpg"
 )
 
 var (
-	rootDir = "images/"
+	rootDir   = "images/"
+	MAX_BATCH = 10
 )
 
 func main2() {
@@ -32,8 +33,15 @@ func main2() {
 	graphicsmagick.Resize(filename, rootDir, "results/gmagick/", width, height, quality)
 }
 
-func main(){
+func main() {
 	var wg sync.WaitGroup
+
+	chLimiter := make(chan struct{}, MAX_BATCH)
+
+	for i := 0; i < MAX_BATCH; i++ {
+		chLimiter <- struct{}{}
+	}
+
 	files := make([]string, 0, 100)
 
 	if err := filepath.Walk("images/100-images", func(path string, info os.FileInfo, err error) error {
@@ -53,12 +61,15 @@ func main(){
 	start := time.Now()
 	// Do Resize
 	for _, url := range files {
+		<-chLimiter
 		wg.Add(1)
-		go func(url string){
+		go func(url string) {
 			defer wg.Done()
 
 			vips.Resize(url[18:], url[:18], "results/vips/", width, height, quality)
 			//graphicsmagick.Resize(url[18:], url[:18], "results/gmagick/", width, height, quality)
+
+			chLimiter <- struct{}{}
 		}(url)
 	}
 
