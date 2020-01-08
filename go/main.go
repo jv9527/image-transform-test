@@ -28,22 +28,15 @@ func main() {
 	for x := 0; x < 20; x++ {
 		go func() {
 			vips.Convert("test1.png", rootDir, "results/vips/")
-		}()
 
-		go func() {
 			vips.Convert("test2.png", rootDir, "results/vips/")
-		}()
 
-		go func() {
 			vips.Convert("test3.png", rootDir, "results/vips/")
-		}()
 
-		go func() {
 			vips.Convert("test4.png", rootDir, "results/vips/")
-		}()
 
-		go func() {
 			vips.Convert("test5.png", rootDir, "results/vips/")
+
 		}()
 
 	}
