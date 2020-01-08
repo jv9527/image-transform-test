@@ -6,3 +6,6 @@ bench-resize-gmagick:
 
 bench-resize-vips:
 	go test ./go/vips/... -bench=. -benchmem
+
+bench-convert-imagick:
+	go test ./go/imagick/... -bench=. -benchmem

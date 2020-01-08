@@ -44,3 +44,22 @@ func Resize(filename, rootDir, rootOut string, width, height, quality int) {
 	mw.WriteImage(rootOut + filename)
 	log.Printf("Gmagick resize time to %dx%d with quaility %d : %.4f", width, height, quality, time.Since(start).Seconds())
 }
+
+func Convert(filename, rootDir, rootOut string) {
+	start := time.Now()
+	mw := gmagick.NewMagickWand()
+	defer mw.Destroy()
+
+	pw := gmagick.NewPixelWand()
+	pw.SetRed(255)
+	pw.SetGreen(255)
+	pw.SetBlue(255)
+
+	mw.SetImageBackgroundColor(pw)
+	mw.ReadImage(rootDir + filename)
+
+	//mw.SetFormat("jpg")
+
+	mw.WriteImage(rootOut + filename + ".jpg")
+	log.Printf("Gmagick convert time to %.4f", time.Since(start).Seconds())
+}
