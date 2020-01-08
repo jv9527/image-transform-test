@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/jv9527/image-transform-test/go/vips"
-	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
 const (
@@ -15,18 +14,40 @@ const (
 )
 
 var (
-	rootDir = "images/png/"
+	rootDir = "../images/png/"
 )
 
 func main() {
-	imagick.Initialize()
-	defer imagick.Terminate()
+	//imagick.Initialize()
+	//defer imagick.Terminate()
 	/* http.HandleFunc("/upload", UploadHandler)
 	log.Fatal(grace.Serve(":9000", nil)) */
 	//vips.Resize("file2.jpg", "images/", "results/vips/", width, height, quality)
 	//graphicsmagick.Resize("file2.jpg", "images/", "results/gmagick/", width, height, quality)
 
-	vips.Convert(filename, rootDir, "results/vips/")
+	for x := 0; x < 20; x++ {
+		go func() {
+			vips.Convert("test1.png", rootDir, "results/vips/")
+		}()
+
+		go func() {
+			vips.Convert("test2.png", rootDir, "results/vips/")
+		}()
+
+		go func() {
+			vips.Convert("test3.png", rootDir, "results/vips/")
+		}()
+
+		go func() {
+			vips.Convert("test4.png", rootDir, "results/vips/")
+		}()
+
+		go func() {
+			vips.Convert("test5.png", rootDir, "results/vips/")
+		}()
+
+	}
+	//vips.Convert(filename, rootDir, "results/vips/")
 	//graphicsmagick.Convert(filename, rootDir, "results/gmagick/")
 	//imgsosick.Convert(filename, rootDir, "results/imagick/")
 }
