@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/jv9527/image-transform-test/go/vips"
+	"github.com/jv9527/image-transform-test/go/graphicsmagick"
 )
 
 const (
@@ -29,11 +29,11 @@ func main() {
 	var wg sync.WaitGroup
 	defer wg.Wait()
 	for x := 0; x < 100; x++ {
-		// go func() {
-		// 	wg.Add(1)
-		// 	vips.Convert("test1.png", rootDir, "results/vips/")
-		// 	wg.Done()
-		// }()
+		go func() {
+			wg.Add(1)
+			graphicsmagick.Convert(filename, rootDir, "results/gmagick/")
+			wg.Done()
+		}()
 		// go func() {
 		// 	wg.Add(1)
 		// 	vips.Convert("test2.png", rootDir, "results/vips/")
@@ -49,11 +49,11 @@ func main() {
 		// 	vips.Convert("test4.png", rootDir, "results/vips/")
 		// 	wg.Done()
 		// }()
-		go func() {
-			wg.Add(1)
-			vips.Convert("test5.png", rootDir, "results/vips/")
-			wg.Done()
-		}()
+		// go func() {
+		// 	wg.Add(1)
+		// 	vips.Convert("test5.png", rootDir, "results/vips/")
+		// 	wg.Done()
+		// }()
 
 	}
 	// vips.Convert(filename, rootDir, "results/vips/")
