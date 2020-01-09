@@ -44,16 +44,16 @@ func main() {
 		// 	vips.Convert("test3.png", rootDir, "results/vips/")
 		// 	wg.Done()
 		// }()
-		go func() {
-			wg.Add(1)
-			vips.Convert("test4.png", rootDir, "results/vips/")
-			wg.Done()
-		}()
 		// go func() {
 		// 	wg.Add(1)
-		// 	vips.Convert("test5.png", rootDir, "results/vips/")
+		// 	vips.Convert("test4.png", rootDir, "results/vips/")
 		// 	wg.Done()
 		// }()
+		go func() {
+			wg.Add(1)
+			vips.Convert("test5.png", rootDir, "results/vips/")
+			wg.Done()
+		}()
 
 	}
 	// vips.Convert(filename, rootDir, "results/vips/")
