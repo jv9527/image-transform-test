@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/jv9527/image-transform-test/go/graphicsmagick"
+	imgsosick "github.com/jv9527/image-transform-test/go/imagick"
+	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
 const (
@@ -19,8 +20,8 @@ var (
 )
 
 func main() {
-	//imagick.Initialize()
-	//defer imagick.Terminate()
+	imagick.Initialize()
+	defer imagick.Terminate()
 	/* http.HandleFunc("/upload", UploadHandler)
 	log.Fatal(grace.Serve(":9000", nil)) */
 	// vips.Resize("file2.jpg", "images/", "results/vips/", width, height, quality)
@@ -31,7 +32,7 @@ func main() {
 	for x := 0; x < 100; x++ {
 		go func() {
 			wg.Add(1)
-			graphicsmagick.Convert("test1.png", rootDir, "results/gmagick/")
+			imgsosick.Convert("test1.png", rootDir, "results/imagick/")
 			wg.Done()
 		}()
 		// go func() {k
