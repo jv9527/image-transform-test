@@ -31,7 +31,7 @@ func main() {
 	for x := 0; x < 100; x++ {
 		go func() {
 			wg.Add(1)
-			graphicsmagick.Convert("test4", rootDir, "results/gmagick/")
+			graphicsmagick.Convert("test1.png", rootDir, "results/gmagick/")
 			wg.Done()
 		}()
 		// go func() {k
