@@ -31,10 +31,10 @@ func main() {
 	for x := 0; x < 100; x++ {
 		go func() {
 			wg.Add(1)
-			graphicsmagick.Convert(filename, rootDir, "results/gmagick/")
+			graphicsmagick.Convert("test4", rootDir, "results/gmagick/")
 			wg.Done()
 		}()
-		// go func() {
+		// go func() {k
 		// 	wg.Add(1)
 		// 	vips.Convert("test2.png", rootDir, "results/vips/")
 		// 	wg.Done()
