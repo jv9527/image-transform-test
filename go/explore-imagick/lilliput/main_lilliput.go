@@ -113,10 +113,8 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 			fmt.Println("Running worker: ", i)
 			defer fmt.Println("Stopping worker: ", i)
 
-			imgOps := lilliput.NewImageOps(8000)
-			defer imgOps.Close()
-
 			outputImg := make([]byte, 1*1024*1024)
+			imgOps := lilliput.NewImageOps(1000)
 
 			for {
 				select {
@@ -125,6 +123,8 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 						wg.Done()
 						return
 					}
+
+					imgOps.Clear()
 					TestResizeLiliput(a.imgB, &a.input, &a.output, a.size, imgOps, outputImg)
 
 					close(a.chDone)
@@ -137,8 +137,6 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 }
 
 func TestResizeLiliput(imgB []byte, input, output *string, size int, imgOps *lilliput.ImageOps, outputImg []byte) {
-	defer imgOps.Clear()
-
 	var err error
 	if imgB == nil {
 		imgB, err = ioutil.ReadFile(*input)
