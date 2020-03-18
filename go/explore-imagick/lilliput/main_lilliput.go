@@ -17,7 +17,7 @@ var (
 
 const (
 	NUM_OF_WORKER = 4
-	PRE_SIZE      = 200
+	PRE_SIZE      = 700
 	QUALITY       = 85
 )
 
@@ -124,8 +124,8 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 						return
 					}
 
-					imgOps.Clear()
 					TestResizeLiliput(a.imgB, &a.input, &a.output, a.size, imgOps, outputImg)
+					imgOps.Clear()
 
 					close(a.chDone)
 				}
