@@ -12,27 +12,27 @@ import (
 
 var (
 	ROOT_FOLDER = "./images/100-images/"
-	IMG_FOLDER = "images/jpg/"
+	IMG_FOLDER  = "images/jpg/"
 )
 
 const (
-	NUM_OF_WORKER= 4
-	PRE_SIZE= 700
-	QUALITY= 85
+	NUM_OF_WORKER = 4
+	PRE_SIZE      = 200
+	QUALITY       = 85
 )
 
 type args struct {
-	imgB    []byte
-	input 	string
-	output 	string
-	size 	int
-	chDone  chan interface{}
+	imgB   []byte
+	input  string
+	output string
+	size   int
+	chDone chan interface{}
 }
 
 var chAdd chan<- *args
 var wg *sync.WaitGroup
 
-func main(){
+func main() {
 	chAdd, wg = runWorker(NUM_OF_WORKER)
 
 	r := mux.NewRouter()
@@ -53,6 +53,7 @@ func HandleResizeRequest(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprint(w, err)
 		return
 	}
+	defer blob.Close()
 
 	// Get Bytes image
 	buf, err := ioutil.ReadAll(blob)
@@ -64,9 +65,9 @@ func HandleResizeRequest(w http.ResponseWriter, r *http.Request) {
 	// Send to Image Resizer
 	chDone := make(chan interface{})
 	chAdd <- &args{
-		imgB: buf,
+		imgB:   buf,
 		output: ROOT_FOLDER + "results/" + "lilliput/" + fmt.Sprintf("%d/%d_", PRE_SIZE, time.Now().UnixNano()) + fileHeader.Filename,
-		size: PRE_SIZE,
+		size:   PRE_SIZE,
 		chDone: chDone,
 	}
 
@@ -82,16 +83,16 @@ func main2() {
 	//time.Sleep(5 * time.Second)
 	start := time.Now()
 
-	for i := 0 ; i <  100 ; i++ {
+	for i := 0; i < 100; i++ {
 		for _, file := range files {
 			if file.IsDir() {
 				continue
 			}
 
 			chAdd <- &args{
-				input: ROOT_FOLDER + IMG_FOLDER + file.Name(),
+				input:  ROOT_FOLDER + IMG_FOLDER + file.Name(),
 				output: ROOT_FOLDER + "results/" + "lilliput/" + fmt.Sprintf("%d/%d_", PRE_SIZE, i) + file.Name(),
-				size: PRE_SIZE,
+				size:   PRE_SIZE,
 			}
 		}
 	}
@@ -107,8 +108,8 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 	chAdd := make(chan *args)
 	wg.Add(numOfWorker)
 
-	for i := 0 ; i < numOfWorker ; i++ {
-		go func(i int, wg *sync.WaitGroup){
+	for i := 0; i < numOfWorker; i++ {
+		go func(i int, wg *sync.WaitGroup) {
 			fmt.Println("Running worker: ", i)
 			defer fmt.Println("Stopping worker: ", i)
 
@@ -136,6 +137,8 @@ func runWorker(numOfWorker int) (chan<- *args, *sync.WaitGroup) {
 }
 
 func TestResizeLiliput(imgB []byte, input, output *string, size int, imgOps *lilliput.ImageOps, outputImg []byte) {
+	defer imgOps.Clear()
+
 	var err error
 	if imgB == nil {
 		imgB, err = ioutil.ReadFile(*input)
@@ -154,12 +157,11 @@ func TestResizeLiliput(imgB []byte, input, output *string, size int, imgOps *lil
 	defer decoder.Close()
 
 	opts := &lilliput.ImageOptions{
-		NormalizeOrientation:true,
+		NormalizeOrientation: true,
 		FileType:             ".jpg",
 		Width:                size,
 		Height:               size,
 		ResizeMethod:         lilliput.ImageOpsResize,
-		//NormalizeOrientation: true,
 		EncodeOptions:        map[int]int{lilliput.JpegQuality: QUALITY},
 	}
 
@@ -170,7 +172,7 @@ func TestResizeLiliput(imgB []byte, input, output *string, size int, imgOps *lil
 		return
 	}
 
-	// Write image
+	//// Write image
 	//if err = ioutil.WriteFile(*output, outputImg, 0664); err != nil {
 	//	fmt.Printf("error while write image. err: %v\n", err)
 	//	return
